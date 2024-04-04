@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "KankerDetection"
 include(":app")
- 
+include(":core")
