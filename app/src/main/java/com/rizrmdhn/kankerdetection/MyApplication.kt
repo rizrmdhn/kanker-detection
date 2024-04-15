@@ -1,6 +1,9 @@
 package com.rizrmdhn.kankerdetection
 
 import android.app.Application
+import com.rizrmdhn.kankerdetection.di.databaseModule
+import com.rizrmdhn.kankerdetection.di.repositoryModule
+import com.rizrmdhn.kankerdetection.di.useCaseModule
 import com.rizrmdhn.kankerdetection.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -15,7 +18,10 @@ class MyApplication : Application() {
             androidContext(this@MyApplication)
             modules(
                 listOf(
-                    viewModelModule
+                    useCaseModule,
+                    viewModelModule,
+                    databaseModule,
+                    repositoryModule,
                 )
             )
         }

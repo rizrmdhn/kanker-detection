@@ -1,14 +1,23 @@
 package com.rizrmdhn.kankerdetection.common
 
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.rizrmdhn.kankerdetection.BuildConfig
+import com.rizrmdhn.kankerdetection.domain.model.Category
+import com.rizrmdhn.kankerdetection.domain.model.Classifications
+import kotlinx.serialization.json.Json
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -17,6 +26,46 @@ object Helpers {
     private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
     private const val MAXIMAL_SIZE = 1000000
     private val timeStamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
+
+    fun convertStringToClassifciations(result: String): List<Classifications> {
+        return parseJson(result)
+    }
+
+    fun uriToBlob(context: Context, uri: Uri): ByteArray? {
+        val contentResolver: ContentResolver = context.contentResolver
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+
+        if (inputStream != null) {
+            return try {
+                val outputStream = ByteArrayOutputStream()
+                val buffer = ByteArray(1024)
+                var bytesRead: Int
+
+                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                    outputStream.write(buffer, 0, bytesRead)
+                }
+
+                outputStream.toByteArray()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            } finally {
+                inputStream.close()
+            }
+        }
+
+        return null
+    }
+
+    fun getImageBitmap(imageBlob: ByteArray): Bitmap? {
+        return try {
+            val inputStream = ByteArrayInputStream(imageBlob)
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     fun getImageUri(context: Context): Uri {
         var uri: Uri? = null
@@ -45,5 +94,24 @@ object Helpers {
             "${BuildConfig.APPLICATION_ID}.fileprovider",
             imageFile
         )
+    }
+
+    private fun parseJson(jsonString: String): List<Classifications> {
+        val pattern = """<Category "([^"]+)" \(displayName= score=([^ ]+) index=(\d)\)>""".toRegex()
+
+        val categoriesList = mutableListOf<Category>()
+        val headIndexList = mutableListOf<Int>()
+
+        pattern.findAll(jsonString).forEach { matchResult ->
+            val (name, score, index) = matchResult.destructured
+            categoriesList.add(Category(name, "", score.toDouble(), index.toInt()))
+        }
+
+        val classificationsList = mutableListOf<Classifications>()
+
+        // Assuming only one Classifications object in the JSON string
+        classificationsList.add(Classifications(categoriesList, 0))
+
+        return classificationsList
     }
 }

@@ -5,13 +5,19 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rizrmdhn.kankerdetection.common.Helpers
+import com.rizrmdhn.kankerdetection.data.KankerDetectionRepository
+import com.rizrmdhn.kankerdetection.data.source.local.entity.ResultHistoryEntity
 import com.rizrmdhn.kankerdetection.utils.ImageClassifierHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.task.vision.classifier.Classifications
+import java.time.Instant
 
-class KankerDetectionAppViewModel : ViewModel() {
+class KankerDetectionAppViewModel(
+    private val kankerDetectionRepository: KankerDetectionRepository,
+) : ViewModel() {
     private val _uri: MutableStateFlow<Uri> = MutableStateFlow(Uri.EMPTY)
     val uri: StateFlow<Uri> = _uri
 
@@ -45,6 +51,20 @@ class KankerDetectionAppViewModel : ViewModel() {
                         setAnalyzingResult(false)
                         _classifications.value = results?.get(0)?.let { listOf(it) } ?: emptyList()
                         navigateToResult()
+
+                        viewModelScope.launch {
+                            Helpers.uriToBlob(context, uri.value)?.let {
+                                ResultHistoryEntity(
+                                    imageUri = it,
+                                    result = results.toString(),
+                                    createdAt = Instant.now().toString(),
+                                )
+                            }?.let {
+                                kankerDetectionRepository.insertHistory(
+                                    it
+                                )
+                            }
+                        }
                     }
 
                     override fun onError(error: String) {
