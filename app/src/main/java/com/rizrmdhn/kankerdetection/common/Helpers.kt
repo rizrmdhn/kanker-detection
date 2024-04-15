@@ -19,6 +19,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -65,6 +67,15 @@ object Helpers {
             e.printStackTrace()
             null
         }
+    }
+
+    fun parseISODateString(isoDateString: String): LocalDateTime {
+        return LocalDateTime.parse(isoDateString, DateTimeFormatter.ISO_DATE_TIME)
+    }
+
+    fun formatDate(dateTime: LocalDateTime): String {
+        val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy HH:mm:ss", Locale("id", "ID"))
+        return formatter.format(dateTime)
     }
 
     fun getImageUri(context: Context): Uri {

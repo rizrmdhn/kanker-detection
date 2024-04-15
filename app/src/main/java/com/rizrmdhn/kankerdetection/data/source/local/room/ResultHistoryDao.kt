@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ResultHistoryDao {
-    @Query("SELECT * FROM result_history")
+    @Query("SELECT * FROM result_history ORDER BY created_at DESC")
     fun getAll(): Flow<List<ResultHistoryEntity>>
 
     @Query("SELECT * FROM result_history WHERE id = :id")

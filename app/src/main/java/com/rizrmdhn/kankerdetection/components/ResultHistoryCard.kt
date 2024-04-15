@@ -1,6 +1,5 @@
 package com.rizrmdhn.kankerdetection.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,8 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -40,8 +39,12 @@ fun ResultHistoryCard(
     modifier: Modifier = Modifier,
     history: ResultHistoryEntity,
 ) {
-    val classifications: List<Classifications> = Helpers.convertStringToClassifciations(history.result)
+    val classifications: List<Classifications> =
+        Helpers.convertStringToClassifciations(history.result)
     val classificationsResult = classifications[0].categories
+
+    val parsedDate = Helpers.parseISODateString(history.createdAt)
+    val formattedDate = Helpers.formatDate(parsedDate)
 
     Card(
         modifier = modifier
@@ -120,8 +123,22 @@ fun ResultHistoryCard(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = "Result : ${classificationsResult[0].name} ${(classificationsResult[0].score * 100).toInt()}%",
+                    text = "Result :",
                     style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "${classificationsResult[0].name} ${(classificationsResult[0].score * 100).toInt()}%",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Created at :",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
