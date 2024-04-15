@@ -3,6 +3,7 @@ package com.rizrmdhn.kankerdetection.ui.screen.history
 import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,9 +29,13 @@ fun HistoryScreen(
             is Resource.Loading -> {
                 viewModel.getAllHistory()
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
                     items(10) {
                         ResultHistoryCardLoader()
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
@@ -59,12 +64,16 @@ fun HistoryContent(
     if (history.isEmpty()) {
         Text(text = "No history found")
     } else {
-        LazyColumn(state = listState) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
             items(history, key = { it.id }) { item ->
                 ResultHistoryCard(
                     history = item
                 )
-                Spacer(modifier =  Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

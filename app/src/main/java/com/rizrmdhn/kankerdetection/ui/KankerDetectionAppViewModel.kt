@@ -16,7 +16,7 @@ import org.tensorflow.lite.task.vision.classifier.Classifications
 import java.time.Instant
 
 class KankerDetectionAppViewModel(
-    private val kankerDetectionRepository: KankerDetectionRepository,
+    private val repository: KankerDetectionRepository,
 ) : ViewModel() {
     private val _uri: MutableStateFlow<Uri> = MutableStateFlow(Uri.EMPTY)
     val uri: StateFlow<Uri> = _uri
@@ -60,7 +60,7 @@ class KankerDetectionAppViewModel(
                                     createdAt = Instant.now().toString(),
                                 )
                             }?.let {
-                                kankerDetectionRepository.insertHistory(
+                                repository.insertHistory(
                                     it
                                 )
                             }

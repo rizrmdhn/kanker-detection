@@ -2,6 +2,7 @@ package com.rizrmdhn.kankerdetection
 
 import android.app.Application
 import com.rizrmdhn.kankerdetection.di.databaseModule
+import com.rizrmdhn.kankerdetection.di.networkModule
 import com.rizrmdhn.kankerdetection.di.repositoryModule
 import com.rizrmdhn.kankerdetection.di.useCaseModule
 import com.rizrmdhn.kankerdetection.di.viewModelModule
@@ -21,6 +22,7 @@ class MyApplication : Application() {
                     useCaseModule,
                     viewModelModule,
                     databaseModule,
+                    networkModule,
                     repositoryModule,
                 )
             )

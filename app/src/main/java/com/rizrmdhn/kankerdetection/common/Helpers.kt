@@ -69,11 +69,22 @@ object Helpers {
         }
     }
 
-    fun parseISODateString(isoDateString: String): LocalDateTime {
-        return LocalDateTime.parse(isoDateString, DateTimeFormatter.ISO_DATE_TIME)
+    fun parseISODateString(isoDateString: String): LocalDateTime? {
+        if (isoDateString.isBlank()) return null // Return null if the input string is empty or blank
+
+        return try {
+            LocalDateTime.parse(isoDateString, DateTimeFormatter.ISO_DATE_TIME)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    fun formatDate(dateTime: LocalDateTime): String {
+    fun formatDate(dateTime: LocalDateTime?): String {
+        if (dateTime == null) {
+            return "Invalid date/time" // or any other appropriate default value or error message
+        }
+
         val formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy HH:mm:ss", Locale("id", "ID"))
         return formatter.format(dateTime)
     }

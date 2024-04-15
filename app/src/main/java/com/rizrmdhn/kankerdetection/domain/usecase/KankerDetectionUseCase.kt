@@ -2,6 +2,7 @@ package com.rizrmdhn.kankerdetection.domain.usecase
 
 import com.rizrmdhn.kankerdetection.data.Resource
 import com.rizrmdhn.kankerdetection.data.source.local.entity.ResultHistoryEntity
+import com.rizrmdhn.kankerdetection.domain.model.News
 import kotlinx.coroutines.flow.Flow
 
 interface KankerDetectionUseCase {
@@ -9,4 +10,6 @@ interface KankerDetectionUseCase {
     fun getHistoryById(id: Int): Flow<Resource<ResultHistoryEntity>>
     suspend fun insertHistory(resultHistory: ResultHistoryEntity)
     fun deleteHistoryById(id: Int)
+
+    fun getNews(): Flow<Resource<List<News>>>
 }

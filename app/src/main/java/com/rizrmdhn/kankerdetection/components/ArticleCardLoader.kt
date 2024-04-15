@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ResultHistoryCardLoader(
+fun ArticleCardLoader(
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -26,24 +26,23 @@ fun ResultHistoryCardLoader(
             .fillMaxWidth()
     ) {
         Row(
-            modifier.padding(16.dp)
         ) {
-            Box(
-                modifier = modifier
-                    .width(200.dp)
-                    .height(200.dp)
-                    .clip(
-                        RoundedCornerShape(8.dp)
-                    )
-                    .background(
-                        shimmerBrush(
-                            targetValue = 1300f,
-                            showShimmer = true
-                        )
-                    )
-            )
-            Spacer(modifier = Modifier.width(16.dp))
             Column {
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(
+                            RoundedCornerShape(8.dp)
+                        )
+                        .background(
+                            shimmerBrush(
+                                targetValue = 1300f,
+                                showShimmer = true
+                            )
+                        )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = modifier
                         .width(200.dp)
@@ -111,6 +110,6 @@ fun ResultHistoryCardLoader(
 
 @Preview
 @Composable
-fun ResultHistoryCardLoaderPreview() {
-    ResultHistoryCardLoader()
+fun ArticleCardLoaderPreview() {
+    ArticleCardLoader()
 }

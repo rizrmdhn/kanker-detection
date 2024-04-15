@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.rizrmdhn.kankerdetection.components.TopBar
 import com.rizrmdhn.kankerdetection.ui.navigation.Screen
+import com.rizrmdhn.kankerdetection.ui.screen.article.ArticleScreen
 import com.rizrmdhn.kankerdetection.ui.screen.history.HistoryScreen
 import com.rizrmdhn.kankerdetection.ui.screen.home.HomeScreen
 import com.rizrmdhn.kankerdetection.ui.screen.result.ResultScreen
@@ -40,6 +41,9 @@ fun KankerDetectionApp(
                 isInHome = currentRoute == Screen.Home.route,
                 navigateToHistory = {
                     navController.navigate(Screen.History.route)
+                },
+                navigateToArticle = {
+                    navController.navigate(Screen.Article.route)
                 },
                 navigateBack = {
                     navController.popBackStack()
@@ -67,6 +71,12 @@ fun KankerDetectionApp(
                         }
                     }
                 )
+            }
+
+            composable(
+                Screen.Article.route,
+            ) {
+                ArticleScreen()
             }
 
             composable(

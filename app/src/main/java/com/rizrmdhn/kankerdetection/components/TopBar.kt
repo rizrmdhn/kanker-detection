@@ -17,6 +17,7 @@ import com.rizrmdhn.kankerdetection.R
 fun TopBar(
     isInHome: Boolean,
     navigateToHistory: () -> Unit,
+    navigateToArticle: () -> Unit,
     navigateBack: () -> Unit
 ) {
     TopAppBar(
@@ -35,6 +36,19 @@ fun TopBar(
                         ),
                         contentDescription = "History"
                     )
+
+            }
+            IconButton(
+                onClick = {
+                    navigateToArticle()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(
+                        R.drawable.baseline_article_24
+                    ),
+                    contentDescription = "Article"
+                )
 
             }
         },

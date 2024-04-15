@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
@@ -24,42 +25,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.rizrmdhn.kankerdetection.common.Helpers
-import com.rizrmdhn.kankerdetection.data.source.local.entity.ResultHistoryEntity
-import com.rizrmdhn.kankerdetection.domain.model.Classifications
-
+import com.rizrmdhn.kankerdetection.domain.model.News
+import com.rizrmdhn.kankerdetection.domain.model.Source
 
 @Composable
-fun ResultHistoryCard(
+fun ArticleCard(
     modifier: Modifier = Modifier,
-    history: ResultHistoryEntity,
+    article: News,
 ) {
-    val classifications: List<Classifications> =
-        Helpers.convertStringToClassifciations(history.result)
-    val classificationsResult = classifications[0].categories
-
-    val parsedDate = Helpers.parseISODateString(history.createdAt)
+    val parsedDate = Helpers.parseISODateString(article.publishedAt)
     val formattedDate = Helpers.formatDate(parsedDate)
 
     Card(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Row(
-            modifier = modifier
-                .padding(16.dp),
-        ) {
+        Column {
             SubcomposeAsyncImage(
-                model = Helpers.getImageBitmap(history.imageUri),
-                contentDescription = "Result Image",
-                contentScale = ContentScale.Fit,
+                model = article.urlToImage,
+                contentDescription = "Article Image",
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .width(200.dp)
+                    .clip(
+                        RoundedCornerShape(
+                            topEnd = 8.dp,
+                            topStart = 8.dp
+                        )
+                    )
+                    .fillMaxWidth()
                     .height(200.dp)
             ) {
                 when (painter.state) {
@@ -120,28 +119,47 @@ fun ResultHistoryCard(
                     }
                 }
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(
-                    text = "Result :",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "${classificationsResult[0].name} ${(classificationsResult[0].score * 100).toInt()}%",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Created at :",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = formattedDate,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = article.title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = article.description,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = formattedDate,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = article.source.name,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
+}
+
+@Preview
+@Composable
+fun ArticleCardPreview() {
+    ArticleCard(
+        article = News(
+            title = "asdadas",
+            description = "asdada",
+            urlToImage = "",
+            url = "",
+            content = "adadas",
+            author = "",
+            publishedAt = "",
+            source = Source(
+                id = "",
+                name = ""
+            )
+        )
+    )
 }

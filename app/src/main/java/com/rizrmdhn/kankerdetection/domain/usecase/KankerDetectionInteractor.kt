@@ -10,4 +10,6 @@ class KankerDetectionInteractor(
     override fun getHistoryById(id: Int) = kankerDetectionRepository.getHistoryById(id)
     override suspend fun insertHistory(resultHistory: ResultHistoryEntity) = kankerDetectionRepository.insertHistory(resultHistory)
     override fun deleteHistoryById(id: Int) = kankerDetectionRepository.deleteHistoryById(id)
+
+    override fun getNews() = kankerDetectionRepository.getNews()
 }
