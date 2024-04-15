@@ -44,6 +44,9 @@ import androidx.core.content.ContextCompat
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import com.rizrmdhn.kankerdetection.common.Helpers
 import com.rizrmdhn.kankerdetection.components.shimmerBrush
 
@@ -89,15 +92,21 @@ fun HomeContent(
         }
     }
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.GetContent()
-    ) {
-        if (it != null) {
-            setImageUri(it)
+    val imageCropLauncher = rememberLauncherForActivityResult(
+        CropImageContract()
+    ) { result ->
+        if (result.isSuccessful) {
+            setImageUri(result.uriContent!!)
         } else {
-            Toast.makeText(context, "Image not found", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Failed to crop image", Toast.LENGTH_SHORT).show()
             setImageUri(Uri.EMPTY)
         }
+    }
+
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        val cropOptions = CropImageContractOptions(uri, CropImageOptions())
+        imageCropLauncher.launch(cropOptions)
     }
 
     val permissionCameraLauncher = rememberLauncherForActivityResult(
@@ -116,7 +125,7 @@ fun HomeContent(
     ) {
         if (it) {
             Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
-            galleryLauncher.launch("image/*")
+            imagePickerLauncher.launch("image/*")
         } else {
             Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -232,7 +241,8 @@ fun HomeContent(
                             )
                         }
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                        galleryLauncher.launch("image/*")
+                        imagePickerLauncher
+                            .launch("image/*")
                     } else {
                         // Request a permission
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

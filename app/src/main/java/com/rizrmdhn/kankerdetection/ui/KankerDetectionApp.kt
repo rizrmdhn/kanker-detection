@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.rizrmdhn.kankerdetection.components.TopBar
 import com.rizrmdhn.kankerdetection.ui.navigation.Screen
@@ -29,11 +30,21 @@ fun KankerDetectionApp(
     val analyzingResult by viewModel.analyzingResult.collectAsState()
     val classifications by viewModel.classifications.collectAsState()
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+
     Scaffold(
         topBar = {
-            TopBar {
-                navController.navigate(Screen.History.route)
-            }
+            TopBar(
+                isInHome = currentRoute == Screen.Home.route,
+                navigateToHistory = {
+                    navController.navigate(Screen.History.route)
+                },
+                navigateBack = {
+                    navController.popBackStack()
+                }
+            )
         }
 
     ) { innerPadding ->
