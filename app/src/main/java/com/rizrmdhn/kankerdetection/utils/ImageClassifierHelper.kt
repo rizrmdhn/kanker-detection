@@ -74,7 +74,7 @@ class ImageClassifierHelper(
 
     }
 
-    interface  ClassifierListener {
+    interface ClassifierListener {
         fun onError(error: String)
         fun onResult(
             results: List<Classifications>?,
